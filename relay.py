@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import serial
 import time
 import argparse
@@ -141,7 +141,7 @@ if __name__ == '__main__':
         time.sleep(0.1)
         serialPort.write(struct.pack('!B',0x00))
         time.sleep(0.1)
-        print "Init Done"
+        print ("Init Done")
 
 # Send cmd to all relay if needed
     if args.allrelay:
@@ -163,7 +163,7 @@ if __name__ == '__main__':
     if args.relay:
         if areRelayArgsOk(args.relay) is not True:
             print(" ".join(str(x) for x in args.relay) + " Wrong relay command")
-            print relayHelp
+            print (relayHelp)
             closeSerialAndExit()
         else:
             serialPort.write(getRelayConfig(args.relay))
