@@ -25,6 +25,12 @@ relayHelp=("Set the Relay Value, possible values 'k1' to 'k4', with 'on' or 'off
                    "'on' is represented by Red LED OFF on the board" + "\n"
                    "'off' is represented by Red LED ON on the board" )
 
+
+# Debug Def
+INFO=1
+WARN=2
+ERROR=3
+
 # Serial Port
 serialPort=None
 
@@ -108,6 +114,8 @@ if __name__ == '__main__':
     parser.add_argument("-r", "--relay", nargs='*', help=relayHelp)
     parser.add_argument("-a", "--allrelay", help="All relay 'On' or 'Off'. If 'on' or 'off' is omited relay is considered as 'on'")
     parser.add_argument("-c", "--custom", help="Send raw command (int) to relay board",type=int)
+    parser.add_argument('-v', '--verbosity', action="count", help="increase output verbosity (e.g., -vv is more than -v)")
+
 
     args = parser.parse_args()
 
@@ -122,6 +130,16 @@ if __name__ == '__main__':
         argTimeout = None
     else:
         argTimeout = args.timeout
+
+    if args.verbosity:
+        def _v_print(*verb_args):
+            if verb_args[0] > (ERROR - args.verbosity):
+                print (verb_args[1])  
+    else:
+        _v_print = lambda *a: None  # do-nothing function
+
+    global v_print
+    v_print = _v_print
 
 # Configure serial
     serialPort = serial.Serial(
@@ -141,42 +159,40 @@ if __name__ == '__main__':
         time.sleep(0.1)
         serialPort.write(struct.pack('!B',0x00))
         time.sleep(0.1)
-        print ("Init Done")
+        v_print(INFO, "Init Done")
 
 # Send cmd to all relay if needed
     if args.allrelay:
         if args.allrelay.lower() == kOn:
             serialPort.write(struct.pack('!B',k1_val+k2_val+k3_val+k4_val))
-            print(args.allrelay + " all relay command applied")
+            v_print(INFO, args.allrelay + " all relay command applied")
             closeSerialAndExit()
 
         elif args.allrelay.lower() == kOff:
             serialPort.write(struct.pack('!B',0))
-            print( args.allrelay + " all relay command applied")
+            v_print(INFO,  args.allrelay + " all relay command applied")
             closeSerialAndExit()
 
         else:
-            print( args.allrelay + " Wrong all relay command")
+            v_print(INFO,  args.allrelay + " Wrong all relay command")
             closeSerialAndExit()
 
 # Send cmd to relay if needed
     if args.relay:
         if areRelayArgsOk(args.relay) is not True:
-            print(" ".join(str(x) for x in args.relay) + " Wrong relay command")
-            print (relayHelp)
+            v_print(INFO, " ".join(str(x) for x in args.relay) + " Wrong relay command")
+            v_print(INFO, relayHelp)
             closeSerialAndExit()
         else:
             serialPort.write(getRelayConfig(args.relay))
-            print(" ".join(str(x) for x in args.relay) + " relay command applied")
+            v_print(INFO, " ".join(str(x) for x in args.relay) + " relay command applied")
             closeSerialAndExit()
 
 # Send raw cmd to relay if needed
-    if args.custom >= 0:
+    if args.custom != None:
         serialPort.write(struct.pack('!B',args.custom))
-        print(str(args.custom) + " custom command applied")
+        v_print(INFO, str(args.custom) + " custom command applied")
         closeSerialAndExit()
 
 
     closeSerialAndExit()
-
-    
