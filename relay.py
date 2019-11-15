@@ -142,14 +142,18 @@ if __name__ == '__main__':
     v_print = _v_print
 
 # Configure serial
-    serialPort = serial.Serial(
-        port=argPort,
-        baudrate=argBaudrate,
-        parity=serial.PARITY_NONE,
-        stopbits=serial.STOPBITS_ONE,
-        bytesize=serial.EIGHTBITS,
-        timeout=argTimeout
-    )
+    try:
+        serialPort = serial.Serial(
+            port=argPort,
+            baudrate=argBaudrate,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
+            timeout=argTimeout
+        )
+    except:
+        print( "Serial port " + argPort +" not found")
+        quit()
 
 # Do relay init if needed
     if args.init is True:
