@@ -14,8 +14,8 @@ k1_name="k1"
 k2_name="k2"
 k3_name="k3"
 k4_name="k4"
-kOn="on"
-kOff="off"
+kOff="on"
+kOn="off"
 
 relayPossibleValue=[k1_name,k2_name,k3_name,k4_name,kOn,kOff]
 
@@ -134,7 +134,7 @@ if __name__ == '__main__':
     if args.verbosity:
         def _v_print(*verb_args):
             if verb_args[0] > (ERROR - args.verbosity):
-                print (verb_args[1])  
+                print (verb_args[1])
     else:
         _v_print = lambda *a: None  # do-nothing function
 
@@ -160,9 +160,6 @@ if __name__ == '__main__':
         serialPort.write(struct.pack('!B',0x50))
         time.sleep(0.1)
         serialPort.write(struct.pack('!B',0x51))
-        time.sleep(0.1)
-        serialPort.write(struct.pack('!B',0x00))
-        time.sleep(0.1)
         v_print(INFO, "Init Done")
 
 # Send cmd to all relay if needed
