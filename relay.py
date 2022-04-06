@@ -99,7 +99,7 @@ if __name__ == '__main__':
  python relay.py --port /dev/ttyUSB1 --init             # Board Initialization
  python relay.py --port /dev/ttyUSB1 --relay k1 on      # Switch On the first relay
  python relay.py --port /dev/ttyUSB1 --allrelay off     # Switch Off all relay
- python relay.py --port /dev/ttyUSB1 --cutom 8          # Switch On k4 relay
+ python relay.py --port /dev/ttyUSB1 --custom 8          # Switch On k4 relay
  '''
 
     parser = argparse.ArgumentParser(prog='python relay.py',
